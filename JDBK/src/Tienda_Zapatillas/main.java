@@ -2,6 +2,7 @@ package Tienda_Zapatillas;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,6 +35,7 @@ public class main {
 					listarTablas(conexion);
 					break;
 				case 2:
+					Comprar(conexion);
 					break;
 				case 3:
 					break;
@@ -298,9 +300,12 @@ public class main {
 
 			// Encabezados de la tabla
 			System.out.println("\n======================= TABLA CLIENTES ==============================");
-	        System.out.println("+----------------+----------------------+----------------------+-----------------------+");
-	        System.out.println("| ID Cliente     | Nombre               | Teléfono             | Email                 |");
-	        System.out.println("+----------------+----------------------+----------------------+-----------------------+");
+			System.out.println(
+					"+----------------+----------------------+----------------------+-----------------------+");
+			System.out.println(
+					"| ID Cliente     | Nombre               | Teléfono             | Email                 |");
+			System.out.println(
+					"+----------------+----------------------+----------------------+-----------------------+");
 
 			// Recorre los resultados y los imprime en formato tabular
 			while (rs.next()) {
@@ -314,7 +319,8 @@ public class main {
 			}
 
 			// Pie de la tabla
-			System.out.println("+----------------+----------------------+----------------------+-----------------------+");
+			System.out.println(
+					"+----------------+----------------------+----------------------+-----------------------+");
 		} catch (Exception e) {
 			System.err.println("Error al imprimir la tabla: " + e.getMessage());
 		}
@@ -360,11 +366,59 @@ public class main {
 
 			// Pie de la tabla
 			System.out.println(
-					"+------------+----------------------+----------------------+--------+------------+-------+");
+					"\n+------------+----------------------+----------------------+--------+------------+-------+");
 		} catch (Exception e) {
 			System.err.println("Error al imprimir la tabla: " + e.getMessage());
 		}
 	}
+
+	public static void Comprar(Connection conexion)throws SQLException {
+		try (Statement stmt = conexion.createStatement(); Scanner sc = new Scanner(System.in)) {
+
+	        System.out.print("Introduce el nombre del producto comprado: ");
+	        String nombreProducto = sc.nextLine();
+
+	        int idProducto = obtenerId(stmt, "Productos", "id_producto", nombreProducto);
+	        
+	        //Si el producto existe devolvera su ID y si no la variable valdra -1
+	        if (idProducto == -1) {
+	            System.out.println("Producto no encontrado, introduce los datos:");
+	            AñadirDatosTablas(conexion);
+	            idProducto = obtenerId(stmt, "Productos", "id_producto", nombreProducto);
+	        }
+
+	        System.out.print("Introduce el nombre del proveedor: ");
+	        String nombreProveedor = sc.nextLine();
+
+	        int idProveedor = obtenerId(stmt, "Proveedores", "id_proveedor", nombreProveedor);
+	        
+	        //Si el proveedor existe devolvera su ID y si no la variable valdra -1
+	        if (idProveedor == -1) {
+	            System.out.println("Proveedor no encontrado, introduce los datos:");
+	            AñadirDatosTablas(conexion);
+	            idProveedor = obtenerId(stmt, "Proveedores", "id_proveedor", nombreProveedor);
+	        }
+
+	        System.out.print("Introduce la fecha de la compra (YYYY-MM-DD): ");
+	        String fechaCompra = sc.nextLine();
+
+	        if (idProducto != -1 && idProveedor != -1) {
+	            stmt.executeUpdate("UPDATE Productos SET stock = stock + 1 WHERE id_producto = " + idProducto + " AND stock > 0");
+	            stmt.executeUpdate("INSERT INTO Compras (fecha, id_producto, id_proveedor) VALUES ('" + fechaCompra + "', " + idProducto + ", " + idProveedor + ")");
+
+	            System.out.println("Compra registrada correctamente.");
+	        } else {
+	            System.out.println("No se pudo registrar la compra debido a datos incompletos.");
+	        }
+	    }
+	}
+	private static int obtenerId(Statement stmt, String tabla, String idCampo, String nombre) throws SQLException {
+	    String sql = "SELECT " + idCampo + " FROM " + tabla + " WHERE nombre = '" + nombre + "'";
+	    try (ResultSet rs = stmt.executeQuery(sql)) {
+	        return rs.next() ? rs.getInt(idCampo) : -1;
+	    }
+	}
+	
 
 	// Metodos tabla Ventas
 
