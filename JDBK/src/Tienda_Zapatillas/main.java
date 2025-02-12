@@ -56,7 +56,13 @@ public class main {
 		}
 
 	}
-
+	
+	/**
+	 * Muestra un submenú para listar diferentes tablas de la base de datos y
+	 * permite al usuario seleccionar qué tabla ver.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
 	public static void listarTablas(Connection conexion) {
 		Scanner sc1 = new Scanner(System.in);
 		Boolean condicion = true;
@@ -92,7 +98,14 @@ public class main {
 			}
 		}
 	}
-
+	
+	/**
+	 * Proporciona funcionalidad para añadir nuevos registros a las tablas de
+	 * Productos, Proveedores o Clientes.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 * @throws SQLException Si ocurre un error de acceso a la base de datos
+	 */
 	public static void AñadirDatosTablas(Connection conexion) throws SQLException {
 		Statement stmt = conexion.createStatement();
 		Scanner sc1 = new Scanner(System.in);
@@ -182,8 +195,15 @@ public class main {
 	}
 
 	// Metodos Tabla Productos
-
-	private static void CrearTablaProductos(Connection conexion) throws SQLException {
+	
+	
+	/**
+	 * Metodo para crear la tabla productos
+	 * 
+	 * @param conexion
+	 * @throws SQLException
+	 */
+	public static void CrearTablaProductos(Connection conexion) throws SQLException {
 		Statement stmt = conexion.createStatement();
 
 		String sql = "CREATE TABLE IF NOT EXISTS Productos (" + "id_producto INT AUTO_INCREMENT PRIMARY KEY, "
@@ -193,7 +213,12 @@ public class main {
 		System.out.println("Tabla departamento creada correctamente");
 		stmt.close();
 	}
-
+	
+	/**
+	 * Imprime todos los registros de la tabla Productos en un formato de tabla.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
 	public static void imprimirTablaProductos(Connection conexion) {
 		String sql = "SELECT * FROM Productos"; // Consulta para obtener todos los datos de la tabla
 
@@ -232,8 +257,14 @@ public class main {
 	}
 
 	// Metodos tabla Proveedores
-
-	private static void CrearTablaProvedores(Connection conexion) throws SQLException {
+	
+	/**
+	 * Metodo para crear la tabla provedores
+	 * 
+	 * @param conexion
+	 * @throws SQLException
+	 */
+	public static void CrearTablaProvedores(Connection conexion) throws SQLException {
 		Statement stmt = conexion.createStatement();
 
 		String sql = "CREATE TABLE IF NOT EXISTS Proveedores (" + "id_proveedor INT AUTO_INCREMENT PRIMARY KEY, "
@@ -243,7 +274,12 @@ public class main {
 		System.out.println("Tabla Provedores creada correctamente");
 		stmt.close();
 	}
-
+	
+	/**
+	 * Imprime todos los registros de la tabla Proveedores en un formato de tabla.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
 	public static void imprimirTablaProveedores(Connection conexion) {
 		String sql = "SELECT * FROM Proveedores"; // Consulta para obtener todos los datos de la tabla
 
@@ -282,6 +318,11 @@ public class main {
 
 	// Metodos tabla Clientes
 
+	/**
+	 * Crea la tabla clientes
+	 * @param conexion
+	 * @throws SQLException
+	 */
 	private static void CrearTablaClientes(Connection conexion) throws SQLException {
 		Statement stmt = conexion.createStatement();
 
@@ -292,7 +333,12 @@ public class main {
 		System.out.println("Tabla Clientes creada correctamente");
 		stmt.close();
 	}
-
+	
+	/**
+	 * Imprime todos los registros de la tabla Proveedores en un formato de tabla.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
 	public static void imprimirTablaClientes(Connection conexion) {
 		String sql = "SELECT * FROM Clientes"; // Consulta para obtener todos los datos de la tabla
 
@@ -327,7 +373,13 @@ public class main {
 	}
 
 	// Metodos tabla Compras
-
+	
+	/**
+	 * Crea la tabla compras
+	 * 
+	 * @param conexion
+	 * @throws SQLException
+	 */
 	private static void CrearTablaCompras(Connection conexion) throws SQLException {
 		Statement stmt = conexion.createStatement();
 
@@ -340,7 +392,12 @@ public class main {
 		System.out.println("Tabla Compras creada correctamente");
 		stmt.close();
 	}
-
+	
+	/**
+	 * Imprime todos los registros de la tabla Compras en un formato de tabla.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
 	public static void imprimirTablaCompras(Connection conexion) {
 		String sql = "SELECT * FROM Compras"; // Consulta para obtener todos los datos de la tabla
 
@@ -366,12 +423,19 @@ public class main {
 
 			// Pie de la tabla
 			System.out.println(
-					"\n+------------+----------------------+----------------------+--------+------------+-------+");
+					"\n+-------------+------------+-------------+-------------+");
 		} catch (Exception e) {
 			System.err.println("Error al imprimir la tabla: " + e.getMessage());
 		}
 	}
-
+	
+	/**
+	 * Gestiona el proceso de compra permitiendo al usuario añadir una compra de
+	 * producto, actualizando el stock y registrando la compra en la base de datos.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 * @throws SQLException Si ocurre un error de acceso a la base de datos
+	 */
 	public static void Comprar(Connection conexion)throws SQLException {
 		try (Statement stmt = conexion.createStatement(); Scanner sc = new Scanner(System.in)) {
 
@@ -412,6 +476,17 @@ public class main {
 	        }
 	    }
 	}
+	
+	/**
+	 * Recupera el ID de un registro en una tabla específica basándose en su nombre.
+	 * 
+	 * @param stmt    Declaración de statement para ejecutar la consulta
+	 * @param tabla   Nombre de la tabla donde buscar
+	 * @param idCampo Nombre del campo ID
+	 * @param nombre  Nombre del registro a buscar
+	 * @return ID del registro encontrado o -1 si no se encuentra
+	 * @throws SQLException Si ocurre un error de acceso a la base de datos
+	 */
 	private static int obtenerId(Statement stmt, String tabla, String idCampo, String nombre) throws SQLException {
 	    String sql = "SELECT " + idCampo + " FROM " + tabla + " WHERE nombre = '" + nombre + "'";
 	    try (ResultSet rs = stmt.executeQuery(sql)) {
@@ -421,7 +496,13 @@ public class main {
 	
 
 	// Metodos tabla Ventas
-
+	
+	/**
+	 * Crea la tabla ventas
+	 * 
+	 * @param conexion
+	 * @throws SQLException
+	 */
 	private static void CrearTablaVentas(Connection conexion) throws SQLException {
 		Statement stmt = conexion.createStatement();
 
@@ -433,35 +514,146 @@ public class main {
 		System.out.println("Tabla Ventas creada correctamente");
 		stmt.close();
 	}
-
+	
+	/**
+	 * Imprime todos los registros de la tabla Ventas en un formato de tabla.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
 	public static void imprimirTablaVentas(Connection conexion) {
 		String sql = "SELECT * FROM Ventas"; // Consulta para obtener todos los datos de la tabla
 
 		try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
 			// Encabezados de la tabla
-			System.out.println("\n================ TABLA COMPRAS =======================");
+			System.out.println("\n================ TABLA VENTAS  =======================");
 			System.out.println("+-------------+------------+-------------+-------------+");
 			System.out.println("| ID Ventas   | Fecha      | ID Producto | ID Clientes |");
 			System.out.println("+-------------+------------+-------------+-------------+");
 
-			// Recorre los resultados y los imprime en formato tabular
 			while (rs.next()) {
-				int idCompra = rs.getInt("id_venta");
+				int idVenta = rs.getInt("id_venta");
 				Date fecha = rs.getDate("fecha");
 				int idProducto = rs.getInt("id_producto");
 				int idCliente = rs.getInt("id_cliente");
 
-				// Formatea cada fila
-				System.out.printf("| %-11d | %-10s | %-11d | %-11d |", idCompra, fecha.toString(), idProducto,
+				System.out.printf("| %-11d | %-10s | %-11d | %-11d |\n", idVenta, fecha.toString(), idProducto,
 						idCliente);
 			}
 
-			// Pie de la tabla
-			System.out.println(
-					"+------------+----------------------+----------------------+--------+------------+-------+");
+			System.out.println("+-------------+------------+-------------+-------------+");
 		} catch (Exception e) {
 			System.err.println("Error al imprimir la tabla: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Gestiona el proceso de venta permitiendo al usuario registrar una venta,
+	 * añadiendo un cliente si es necesario y actualizando el stock del producto.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
+	public static void Vender(Connection conexion) {
+		try (Statement stmt = conexion.createStatement(); Scanner sc = new Scanner(System.in)) {
+
+			System.out.println("Introduce el nombre del producto vendido:");
+			String productoVendido = sc.nextLine();
+
+			System.out.println("Introduce el nombre del cliente:");
+			String clienteVenta = sc.nextLine();
+
+			// Buscar el cliente por nombre
+			int idCliente = -1;
+			String buscarCliente = "SELECT id_cliente FROM Clientes WHERE nombre = '" + clienteVenta + "'";
+
+			try (ResultSet rsCliente = stmt.executeQuery(buscarCliente)) {
+				if (rsCliente.next()) {
+					idCliente = rsCliente.getInt("id_cliente");
+				}
+			}
+
+			// Si el cliente no existe, agregarlo
+			if (idCliente == -1) {
+				System.out.println("Cliente no encontrado. Introduce el email del cliente:");
+				String emailCliente = sc.nextLine();
+
+				System.out.println("Introduce el teléfono del cliente:");
+				String telefonoCliente = sc.nextLine();
+
+				String insertarCliente = "INSERT INTO Clientes (nombre, email, telefono) VALUES ('" + clienteVenta
+						+ "', '" + emailCliente + "', '" + telefonoCliente + "')";
+				stmt.executeUpdate(insertarCliente);
+
+				// Recuperar el ID del cliente recién insertado
+				try (ResultSet rsNuevoCliente = stmt.executeQuery(buscarCliente)) {
+					if (rsNuevoCliente.next()) {
+						idCliente = rsNuevoCliente.getInt("id_cliente");
+					}
+				}
+			}
+
+			// Buscar el producto por nombre
+			int idProducto = -1;
+			String buscarProducto = "SELECT id_producto FROM Productos WHERE nombre = '" + productoVendido + "'";
+
+			try (ResultSet rsProducto = stmt.executeQuery(buscarProducto)) {
+				if (rsProducto.next()) {
+					idProducto = rsProducto.getInt("id_producto");
+				}
+			}
+
+			System.out.println("Introduce la fecha de la venta (YYYY-MM-DD):");
+			String fechaVenta = sc.nextLine();
+
+			// Si el producto y el cliente existen, registrar la venta
+			if (idProducto != -1 && idCliente != -1) {
+				String sqlVender = "INSERT INTO Ventas (fecha, id_producto, id_cliente) VALUES ('" + fechaVenta + "', "
+						+ idProducto + ", " + idCliente + ")";
+				String sqlStock = "UPDATE Productos SET stock = stock - 1 WHERE nombre = '" + productoVendido
+						+ "' AND stock > 0";
+
+				stmt.executeUpdate(sqlVender);
+				stmt.executeUpdate(sqlStock);
+				System.out.println("Venta registrada correctamente.");
+			} else {
+				System.out.println("Error: Producto no encontrado.");
+			}
+		} catch (Exception e) {
+			System.err.println("Error en la venta: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * Realiza una consulta de unión (join) entre las tablas Compras y Ventas,
+	 * mostrando información relacionada de productos comprados y vendidos.
+	 * 
+	 * @param conexion Conexión activa a la base de datos
+	 */
+	public static void joinComprasYVentas(Connection conexion) {
+		String sql = "SELECT c.id_compra, c.fecha AS fecha_compra, v.id_venta, v.fecha AS fecha_venta, p.nombre AS producto "
+				+ "FROM Compras c " + "INNER JOIN Ventas v ON c.id_producto = v.id_producto "
+				+ "INNER JOIN Productos p ON c.id_producto = p.id_producto";
+
+		try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+			System.out.println("\n========= COMPRAS Y VENTAS =========");
+			System.out.println("+-----------+-------------+-----------+-------------+----------------+");
+			System.out.println("| ID Compra | Fecha Compra| ID Venta  | Fecha Venta | Nombre Producto|");
+			System.out.println("+-----------+-------------+-----------+-------------+----------------+");
+
+			while (rs.next()) {
+				int idCompra = rs.getInt("id_compra");
+				String fechaCompra = rs.getString("fecha_compra");
+				int idVenta = rs.getInt("id_venta");
+				String fechaVenta = rs.getString("fecha_venta");
+				String nombreProducto = rs.getString("producto");
+
+				System.out.printf("| %-9d | %-11s | %-9d | %-11s | %-14s |\n", idCompra, fechaCompra, idVenta,
+						fechaVenta, nombreProducto);
+			}
+
+			System.out.println("+-----------+-------------+-----------+-------------+----------------+");
+		} catch (SQLException e) {
+			System.err.println("Error en JOIN de Compras y Ventas: " + e.getMessage());
 		}
 	}
 
